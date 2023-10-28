@@ -13,6 +13,7 @@ class DataStream:
         for max in buffer_maximums:
             self.buffers.append(bf.Buffer(max_size=max))
         
+        self.csv_file_path = csv_file_path
         self.file_obj_r = None
         self.file_obj_w = None
         self.csv_reader = None
@@ -42,9 +43,9 @@ class DataStream:
         self.csv_reader = csv.reader(self.file_obj_r)
         self.csv_writer = csv.writer(self.file_obj_w)
         
-        # print("Printing csv file: ")
-        # for row in self.csv_reader:
-        #     print(row)
+        print("Printing csv file: ")
+        for row in self.csv_reader:
+            print(row)
 
     
     def detach_csv(self):
@@ -74,6 +75,16 @@ class DataStream:
     def append_to_csv(self):
         # self.csv_writer.
         pass
+    
+    def initialize_csv(self, *col_names):
+        # Make it so that multiple csv's can be made (filename conflict)
+        self.csv_file_path = "/data/test_1.csv"
+        self.file_obj_r = open("/data/test_1.csv", 'r', newline='')
+        self.file_obj_w = open("/data/test_1.csv", 'w', newline='')
+        self.csv_reader = csv.reader(self.file_obj_r)
+        self.csv_writer = csv.writer(self.file_obj_w)
+        print('csv initialized')
+        
         
         
     def feed_buffers(self, *args):
@@ -92,6 +103,21 @@ class DataStream:
             
         for buffer, arg in zip(self.buffers, args):
             buffer.add(arg)
+            
+        self.buffer_spill_to_csv()
+            
+            
+    def buffer_spill_to_csv(self):
+        """
+        Store oldest data from each buffer into csv file.
+        """
+        row = []
+        for buffer in self.buffers:
+            if buffer.is_full():
+                row.append(buffer.buffer[0])
+            else:
+                row.append(None) # Converts to empty string on csv
+        self.csv_writer.writerow(row)
 
 
     def flush_all(self):
