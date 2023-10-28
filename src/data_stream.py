@@ -5,21 +5,24 @@ import buffer as bf
 class DataStream:
     
     # To-Do?: Add func to add/remove more buffers after instantiation.
-    def __init__(self, csv_file_path = None, *args):
+    def __init__(self, *buffer_maximums, csv_file_path=None, save_rate=10):
         """
         Example of data_stream with 3 buffers: Buffer(path, 10, 20, 30)
         """
         self.buffers = []
-        for arg in args:
-            self.buffers.append(bf.Buffer(max_size=arg))
-            
-        self.csv_file_obj = None
-        self.csv_DictReader = None
-        self.csv_DictWriter = None
+        for max in buffer_maximums:
+            self.buffers.append(bf.Buffer(max_size=max))
+        
+        self.file_obj_r = None
+        self.file_obj_w = None
+        self.csv_reader = None
+        self.csv_writer = None
         
         if csv_file_path:
             print("Trying to attach")
             self.attach_csv(csv_file_path)
+            
+        self.counter = 0
         
             
     def attach_csv(self, csv_file_path):
@@ -32,33 +35,44 @@ class DataStream:
         Returns:
             None
         """
-        if (csv_file_path != ''):
+        if self.file_obj_r != None or self.file_obj_w != None:
             self.detach_csv()
-        self.csv_file_obj = open(csv_file_path)
-        self.csv_DictReader = csv.DictReader(self.csv_file_obj, 'r')
-        self.csv_DictWriter = csv.DictWriter(self.csv_file_obj, 'w')
-    
+        self.file_obj_r = open(csv_file_path, 'r', newline='')
+        self.file_obj_w = open(csv_file_path, 'a', newline='')
+        self.csv_reader = csv.reader(self.file_obj_r)
+        self.csv_writer = csv.writer(self.file_obj_w)
+        
+        # print("Printing csv file: ")
+        # for row in self.csv_reader:
+        #     print(row)
+
     
     def detach_csv(self):
         """
         Detach instance of data_stream from csv file and close csv file.
         """
-        if self.csv_file_obj is not None:
-            self.csv_file_obj.close()
-            self.csv_file_obj = None
+        if self.file_obj_r is not None:
+            self.file_obj_r.close()
+            self.file_obj_r = None
+        else: 
+            print("No csv file attached.")
+        if self.file_obj_w is not None:
+            self.file_obj_w.close()
+            self.file_obj_w = None
         else: 
             print("No csv file attached.")
              
-        if self.csv_DictReader is not None:
-            self.csv_DictReader.close()
-            self.csv_DictReader = None
+        if self.csv_reader is not None:
+            self.csv_reader.close()
+            self.csv_reader = None
             
-        if self.csv_DictWriter is not None:
-            self.csv_DictWriter.close()
-            self.csv_DictWriter = None
+        if self.csv_writer is not None:
+            self.csv_writer.close()
+            self.csv_writer = None
             
         
     def append_to_csv(self):
+        # self.csv_writer.
         pass
         
         
@@ -77,9 +91,7 @@ class DataStream:
             exit()
             
         for buffer, arg in zip(self.buffers, args):
-            if buffer.is_full():
-                buffer.buffer.pop(0)
-            buffer.buffer.append(arg)  
+            buffer.add(arg)
 
 
     def flush_all(self):
