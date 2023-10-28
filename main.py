@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src/')
 import data_stream as ds
 
 if __name__ == '__main__':
