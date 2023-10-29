@@ -6,6 +6,7 @@ class OpenAIConvo:
         self.system_content = system_content
         self.assistant_content = assistant_content
         
+        
     def run_convo(self):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -18,11 +19,14 @@ class OpenAIConvo:
         self.assistant_content = response['choices'][0]['message']['content']
         return self.assistant_content
     
+    
     def add_user_content(self, user_content):
         self.user_content = user_content
         
+        
     def add_system_content(self, system_content):
         self.system_content = system_content
+        
         
     def add_assistant_content(self, assistant_content):
         self.assistant_content = assistant_content
