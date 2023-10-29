@@ -62,7 +62,6 @@ class DataStream:
             self.file_obj_w = None
         else: 
             print("No csv file attached.")
-             
         if self.csv_reader is not None:
             self.csv_reader.close()
             self.csv_reader = None
@@ -141,6 +140,24 @@ class DataStream:
                 buffer.pop(0)
             self.csv_writer.writerow(row)
             row.clear()
+            
+    
+    def get_last_n_from_csv(self, n):
+        """
+        Read in n latest rows from csv file.
+
+        Args:
+            n (int): Number of rows to read in.
+
+        Returns:
+            List of rows read in.
+        """
+        rows = []
+        for row in reversed(list(self.csv_reader)):
+            rows.append(row)
+            if len(rows) == n:
+                break
+        return rows
 
 
     def display(self):

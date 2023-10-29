@@ -8,7 +8,11 @@ from speech_recognition import SpeechRecognition
 
 if __name__ == '__main__':
     # SpeechRecognition Test
-    sr = SpeechRecognition("C:/Users/wilso/OneDrive/Documents/Code/CalHacks/data/TQBFJOTLD.wav")
+    api_key = "C:/Users/wilso/OneDrive/Documents/Code/keys/analog-daylight-403506-6c4956196627.json"
+    file_location = "C:/Users/wilso/OneDrive/Documents/Code/CalHacks/data/Audio-Kawasaki.wav"
+    sr = SpeechRecognition(
+        file_location,
+        api_key)
     speech_to_text = sr.run()
     print(speech_to_text)
     
@@ -23,6 +27,23 @@ if __name__ == '__main__':
     
     # print(d_stream.get_last_n_from_csv(5))
     
+    # OpenAIConvo Test
+    # Set up OpenAI API key
+    API_KEY = open("C:/Users/wilso/OneDrive/Documents/Code/keys/key_openAI_cal-hacks", "r").read()
+    openai.api_key = API_KEY
+    
+    chatGPT = OpenAIConvo()
+    chatGPT.add_user_content(speech_to_text)
+    response = chatGPT.run_convo()
+    print(response)
+    
+    # chatGPT.add_assistant_content(response)
+    # chatGPT.add_user_content("In one sentence, what is the second largest?")
+    # response = chatGPT.run_convo()
+    # print(response)    
+    
+    
+    
     # # OpenAIConvo Test
     # # Set up OpenAI API key
     # API_KEY = open("C:/Users/wilso/OneDrive/Documents/Code/keys/key_openAI_cal-hacks", "r").read()
@@ -36,4 +57,4 @@ if __name__ == '__main__':
     # chatGPT.add_assistant_content(response)
     # chatGPT.add_user_content("In one sentence, what is the second largest?")
     # response = chatGPT.run_convo()
-    # print(response)o
+    # print(response)

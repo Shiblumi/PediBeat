@@ -10,6 +10,8 @@ class OpenAIConvo:
     def run_convo(self):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
+            max_tokens=40,
+            temperature=0.9,
             messages=[
                 {"role": "system", "content": self.system_content},
                 {"role": "user", "content": self.user_content},
