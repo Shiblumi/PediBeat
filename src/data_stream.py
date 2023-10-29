@@ -70,11 +70,7 @@ class DataStream:
         if self.csv_writer is not None:
             self.csv_writer.close()
             self.csv_writer = None
-            
-        
-    def append_to_csv(self):
-        # self.csv_writer.
-        pass
+
     
     def initialize_csv(self, *col_names):
         # Make it so that multiple csv's can be made (filename conflict)
@@ -83,6 +79,7 @@ class DataStream:
         self.file_obj_r = open("./data/test_1.csv", 'r', newline='')
         self.csv_reader = csv.reader(self.file_obj_r)
         self.csv_writer = csv.writer(self.file_obj_w)
+        self.csv_writer.writerow(col_names)
         print('csv initialized')
         
         
@@ -119,14 +116,15 @@ class DataStream:
         self.csv_writer.writerow(row)
 
 
-    def flush_all(self):
+    def flush_buffers(self):
         """
         Empty all buffers.
         """
         for buffer in self.buffers:
             buffer.clear()
             
-    def flush_all_to_csv(self):
+            
+    def flush_buffers_to_csv(self):
         """
         Store all buffers onto csv and empty all buffers.
         """
@@ -144,7 +142,7 @@ class DataStream:
             self.csv_writer.writerow(row)
             row.clear()
 
-            
+
     def display(self):
         """
         Display current contents of all buffers.
