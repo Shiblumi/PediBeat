@@ -5,7 +5,7 @@ import buffer as bf
 class DataStream:
     
     # To-Do?: Add func to add/remove more buffers after instantiation.
-    def __init__(self, *buffer_maximums, csv_file_path=None, save_rate=10):
+    def __init__(self, *buffer_maximums, csv_file_path=None):
         """
         Example of data_stream with 3 buffers: Buffer(path, 10, 20, 30)
         """
@@ -78,13 +78,12 @@ class DataStream:
     
     def initialize_csv(self, *col_names):
         # Make it so that multiple csv's can be made (filename conflict)
-        self.csv_file_path = "/data/test_1.csv"
-        self.file_obj_r = open("/data/test_1.csv", 'r', newline='')
-        self.file_obj_w = open("/data/test_1.csv", 'w', newline='')
+        self.csv_file_path = "./data/test_1.csv"
+        self.file_obj_w = open("./data/test_1.csv", 'w', newline='')
+        self.file_obj_r = open("./data/test_1.csv", 'r', newline='')
         self.csv_reader = csv.reader(self.file_obj_r)
         self.csv_writer = csv.writer(self.file_obj_w)
         print('csv initialized')
-        
         
         
     def feed_buffers(self, *args):
@@ -127,6 +126,24 @@ class DataStream:
         for buffer in self.buffers:
             buffer.clear()
             
+    def flush_all_to_csv(self):
+        """
+        Store all buffers onto csv and empty all buffers.
+        """
+        row = []
+        go_next = True
+        while go_next:
+            go_next = False
+            for buffer in self.buffers:
+                if len(buffer) == 0:
+                    row.append(None)
+                else:
+                    row.append(buffer[0])
+                    go_next = True
+                buffer.pop(0)
+            self.csv_writer.writerow(row)
+            row.clear()
+
             
     def display(self):
         """

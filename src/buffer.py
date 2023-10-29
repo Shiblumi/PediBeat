@@ -11,4 +11,15 @@ class Buffer:
             self.buffer.pop(0)
         self.buffer.append(data)
         
+    def __len__(self):
+        return len(self.buffer)
+    
+    def __getitem__(self, key):
+        return self.buffer[key]
+    
+    def pop(self, key):
+        if len(self.buffer) == 0:
+            return None
+        return self.buffer.pop(key)
+        
     
