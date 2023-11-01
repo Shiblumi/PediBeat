@@ -1,4 +1,3 @@
-# Source: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/HEAD/speech/snippets/quickstart.py
 # Imports the Google Cloud client library
 
 from google.cloud import speech
@@ -19,7 +18,7 @@ class SpeechRecognition:
     def set_api_key(self, api_key: str):
         self.api_key = api_key
         
-
+    # Source: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/HEAD/speech/snippets/quickstart.py
     def run(self) -> speech.RecognizeResponse:
         # Instantiates a client
         client = speech.SpeechClient.from_service_account_file(self.api_key)
